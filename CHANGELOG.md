@@ -1,3 +1,12 @@
+## [1.1.1] - 2026-09-29
+
+### 🐛 Bug Fixes
+
+- No empty unit suite
+
+### 📚 Documentation
+
+- Update CHANGELOG.md for 1.1.0
 ## [1.1.0] - 2026-09-29
 
 ### 🚀 Features
