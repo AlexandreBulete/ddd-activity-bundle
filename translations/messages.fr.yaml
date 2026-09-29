@@ -1,0 +1,19 @@
+activity:
+    menu:
+        journal: Journal d'activité
+    field:
+        occurred_at: Quand
+        actor: Qui
+        action: Action
+        summary: Résumé
+        subject: Sur
+        subject_type: Type d'objet
+        subject_id: Id de l'objet
+        outcome: Résultat
+        channel: Canal
+        error: Erreur
+        chain: Chaîne
+    action:
+        show_chain: Voir la chaîne
+    summary:
+        purged: "Purge du journal antérieur au %before%"

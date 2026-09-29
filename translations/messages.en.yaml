@@ -1,0 +1,19 @@
+activity:
+    menu:
+        journal: Activity journal
+    field:
+        occurred_at: When
+        actor: Who
+        action: Action
+        summary: Summary
+        subject: On
+        subject_type: Subject type
+        subject_id: Subject id
+        outcome: Outcome
+        channel: Channel
+        error: Error
+        chain: Chain
+    action:
+        show_chain: Show the chain
+    summary:
+        purged: "Journal purged before %before%"

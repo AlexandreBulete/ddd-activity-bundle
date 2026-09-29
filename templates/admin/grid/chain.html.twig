@@ -1,0 +1,6 @@
+{# The whole chain this entry belongs to: the journal filtered on its correlation id. #}
+{% if data %}
+    <a href="{{ path('activity_admin_activity_entry_index', {criteria: {correlationId: {type: 'equal', value: data}}, sorting: {occurredAt: 'asc'}}) }}">
+        {{ 'activity.action.show_chain'|trans }}
+    </a>
+{% endif %}
