@@ -44,6 +44,7 @@ final readonly class ActivityWriter
             'kind' => $entry->kind->value,
             'action' => $entry->action,
             'permission' => $entry->permission,
+            'visible_with' => $entry->visibleWith,
             'outcome' => $entry->outcome->value,
             'error' => $entry->error,
             'actor_kind' => $entry->actorKind,

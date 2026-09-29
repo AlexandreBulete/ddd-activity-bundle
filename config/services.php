@@ -11,6 +11,7 @@ use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Listener\TableName
 use AlexandreBulete\DddActivityBundle\Infrastructure\Journal\ActivityJournal;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Journal\ActivityWriter;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Journal\EntryFactory;
+use AlexandreBulete\DddActivityBundle\Infrastructure\Journal\JournalContext;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Journal\IndependentConnectionFactory;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Journal\JournalMiddleware;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Journal\JournalPolicy;
@@ -54,6 +55,7 @@ return static function (ContainerConfigurator $container): void {
         ]);
 
     $services->set(JournalPolicy::class);
+    $services->set(JournalContext::class);
     $services->set(EntryFactory::class);
     $services->set(ActivityJournal::class)->public();
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20260929120000;
+use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20261001130000;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
@@ -20,7 +21,7 @@ return static function (ContainerConfigurator $container): void {
         ->autowire()
         ->tag('doctrine_migrations.migration');
 
-    foreach ([Version20260929120000::class] as $migration) {
+    foreach ([Version20260929120000::class, Version20261001130000::class] as $migration) {
         $services->set($migration)->arg('$table', param('activity.table'));
     }
 };

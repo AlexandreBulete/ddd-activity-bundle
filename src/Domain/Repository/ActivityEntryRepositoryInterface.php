@@ -17,6 +17,14 @@ use AlexandreBulete\DddFoundation\Domain\Repository\RepositoryInterface;
 interface ActivityEntryRepositoryInterface extends RepositoryInterface
 {
     /**
+     * Only what a viewer may see (ADR 0009): entries of actions they hold the
+     * permission for — or are made visible with one they hold — and their own.
+     *
+     * @param list<string> $permissions what the viewer holds
+     */
+    public function visibleTo(array $permissions, ?string $actorId): static;
+
+    /**
      * Every entry of one chain, oldest first.
      *
      * @return list<ActivityEntry>

@@ -16,8 +16,9 @@ use AlexandreBulete\DddFoundation\Domain\Repository\RepositoryInterface;
 #[AsQueryHandler]
 final readonly class FindActivityEntriesHandler extends QueryCollectionHandler
 {
-    public function __construct(ActivityEntryRepositoryInterface $entries)
-    {
+    public function __construct(
+        private ActivityEntryRepositoryInterface $entries,
+    ) {
         parent::__construct($entries);
     }
 
@@ -26,6 +27,10 @@ final readonly class FindActivityEntriesHandler extends QueryCollectionHandler
      */
     public function __invoke(FindActivityEntriesQuery $query): RepositoryInterface
     {
-        return $this->build($query);
+        $visibility = $query->visibility;
+
+        return $this->build($query, $visibility === null
+            ? null
+            : $this->entries->visibleTo($visibility->permissions, $visibility->actorId));
     }
 }

@@ -9,6 +9,7 @@ use AlexandreBulete\DddActivityBundle\Domain\ValueObject\ActivityEntryId;
 use AlexandreBulete\DddActivityBundle\Domain\ValueObject\EntryKind;
 use AlexandreBulete\DddActivityBundle\Domain\ValueObject\Outcome;
 use AlexandreBulete\DddFoundation\Application\Activity\ActivityDescription;
+use AlexandreBulete\DddSymfonyBundle\Messenger\Authorization\PermissionDenied;
 use AlexandreBulete\DddSymfonyBundle\Messenger\Tracing\Trace;
 use Psr\Clock\ClockInterface;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
@@ -29,6 +30,8 @@ final readonly class EntryFactory
         EntryKind $kind,
         string $action,
         ?ActivityDescription $description,
+        ?string $permission = null,
+        ?string $visibleWith = null,
         ?\Throwable $failure = null,
     ): ActivityEntry {
         return ActivityEntry::record(
@@ -36,7 +39,13 @@ final readonly class EntryFactory
             occurredAt: $this->clock->now(),
             kind: $kind,
             action: $action,
-            outcome: $failure === null ? Outcome::Succeeded : Outcome::Failed,
+            outcome: match (true) {
+                $failure === null => Outcome::Succeeded,
+                $failure instanceof PermissionDenied => Outcome::Refused,
+                default => Outcome::Failed,
+            },
+            permission: $permission,
+            visibleWith: $visibleWith,
             actorKind: $trace->actor->kind->value,
             actorId: $trace->actor->id,
             actorLabel: $trace->actor->label,

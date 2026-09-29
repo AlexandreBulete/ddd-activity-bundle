@@ -10,6 +10,7 @@ use AlexandreBulete\DddFoundation\Application\Query\QueryBusInterface;
 use AlexandreBulete\DddSymfonyBundle\DddSymfonyBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpKernel\Kernel;
  * Security, no IAM. On the database given by DDD_TEST_DATABASE_URL, or a
  * SQLite file (a second connection must see the same database).
  */
-final class TestKernel extends Kernel
+class TestKernel extends Kernel
 {
     use MicroKernelTrait;
 
@@ -40,12 +41,19 @@ final class TestKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return sys_get_temp_dir() . '/ddd-activity-bundle-tests/cache';
+        return sys_get_temp_dir() . '/ddd-activity-bundle-tests/cache/' . (new \ReflectionClass($this))->getShortName();
     }
 
     public function getLogDir(): string
     {
         return sys_get_temp_dir() . '/ddd-activity-bundle-tests/log';
+    }
+
+    /**
+     * No permission checker by default: authorization stays off.
+     */
+    protected function configureAuthorization(ContainerConfigurator $container): void
+    {
     }
 
     protected function configureContainer(ContainerConfigurator $container): void
@@ -85,5 +93,10 @@ final class TestKernel extends Kernel
 
         $services->alias('test.command_bus', CommandBusInterface::class)->public();
         $services->alias('test.query_bus', QueryBusInterface::class)->public();
+
+        // Some tests break the journal on purpose: what it logs then is expected.
+        $services->set('logger', NullLogger::class);
+
+        $this->configureAuthorization($container);
     }
 }

@@ -19,6 +19,7 @@
         <field name="kind" type="string" length="10" enum-type="AlexandreBulete\DddActivityBundle\Domain\ValueObject\EntryKind"/>
         <field name="action" type="string" length="255"/>
         <field name="permission" type="string" length="190" nullable="true"/>
+        <field name="visibleWith" type="string" column="visible_with" length="190" nullable="true"/>
         <field name="outcome" type="string" length="10" enum-type="AlexandreBulete\DddActivityBundle\Domain\ValueObject\Outcome"/>
         <field name="error" type="text" nullable="true"/>
         <field name="actorKind" type="string" column="actor_kind" length="10"/>
@@ -40,6 +41,7 @@
             <index columns="actor_kind,actor_id"/>
             <index columns="subject_type,subject_id"/>
             <index columns="action"/>
+            <index columns="permission"/>
         </indexes>
     </entity>
 </doctrine-mapping>

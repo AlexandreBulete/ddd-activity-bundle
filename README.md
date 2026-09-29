@@ -15,7 +15,7 @@ composer require alexandrebulete/ddd-activity-bundle
 bin/console doctrine:migrations:migrate
 ```
 
-Requires `alexandrebulete/ddd-symfony-bundle` ≥ 1.2, whose tracing provides the
+Requires `alexandrebulete/ddd-symfony-bundle` ≥ 1.3, whose tracing provides the
 actor and the chain on every message. Symfony Security and an IAM are
 optional: without them, the system is the actor of every chain.
 
@@ -33,8 +33,11 @@ The bundle ships its own migration (a service, so it follows
 
 Each entry keeps: when; who (kind, id, and the name *at that time*); the
 action; the outcome (`succeeded`, `failed` with the error, `refused`); the
-channel; the chain (`correlation_id`, `causation_id`, `message_id`); and what
-the message chose to describe.
+channel; the chain (`correlation_id`, `causation_id`, `message_id`); the
+permission of the use case; and what the message chose to describe.
+
+A use case refused by the authorization middleware is journaled as `refused`,
+with who asked.
 
 ### Describing a use case
 
@@ -89,6 +92,20 @@ around it is rolled back.
 **Databases.** PostgreSQL and MySQL get every guarantee above. SQLite has a
 single writer: a failure occurring *after* the command wrote cannot be
 journaled — it is logged instead, without ever blocking the application.
+
+## Who sees what
+
+Every entry carries the permission of its use case (an effect, the one of the
+use case that caused it). When the application authorizes use cases (a
+`PermissionCheckerInterface` is registered — the IAM does it), a viewer sees:
+
+- the entries of the use cases they may run themselves,
+- the entries of a message marked `#[Journaled(visibleWith: 'mission.supervise')]`
+  when they hold that permission — to widen the audience of a sensitive read,
+- their own actions.
+
+Seeing the journal at all takes `activity.find_activity_entries`. Without a
+checker, everything is visible to whoever reaches the screen.
 
 ## Back office
 

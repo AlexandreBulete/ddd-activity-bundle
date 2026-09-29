@@ -6,6 +6,7 @@ namespace AlexandreBulete\DddActivityBundle\Tests\Integration;
 
 use AlexandreBulete\DddActivityBundle\Application\Command\PurgeActivity\PurgeActivityCommand;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20260929120000;
+use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20261001130000;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\CreateThing;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\Housekeeping;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\ListThings;
@@ -55,11 +56,13 @@ final class JournalTest extends KernelTestCase
         foreach ($schemaManager->listTableNames() as $table) {
             $schemaManager->dropTable($table);
         }
-        $from = $schemaManager->introspectSchema();
-        $to = clone $from;
-        (new Version20260929120000($this->connection, new NullLogger(), self::TABLE))->up($to);
-        foreach ($this->connection->getDatabasePlatform()->getAlterSchemaSQL($schemaManager->createComparator()->compareSchemas($from, $to)) as $sql) {
-            $this->connection->executeStatement($sql);
+        foreach ([Version20260929120000::class, Version20261001130000::class] as $migration) {
+            $from = $schemaManager->introspectSchema();
+            $to = clone $from;
+            (new $migration($this->connection, new NullLogger(), self::TABLE))->up($to);
+            foreach ($this->connection->getDatabasePlatform()->getAlterSchemaSQL($schemaManager->createComparator()->compareSchemas($from, $to)) as $sql) {
+                $this->connection->executeStatement($sql);
+            }
         }
         (new SchemaTool($em))->createSchema([$em->getClassMetadata(Thing::class)]);
     }
@@ -87,6 +90,7 @@ final class JournalTest extends KernelTestCase
         self::assertSame('thing.created', $entry['summary']);
         self::assertSame(['name' => 'alpha'], $this->json($entry['details']));
         self::assertSame($entry['message_id'], $entry['correlation_id'], 'the first message starts the chain');
+        self::assertSame('thing.create', $entry['permission']);
     }
 
     #[Test]
@@ -154,6 +158,7 @@ final class JournalTest extends KernelTestCase
         $command = $this->only(CreateThing::class);
         self::assertSame('effect', $effect['kind']);
         self::assertSame($command['correlation_id'], $effect['correlation_id']);
+        self::assertSame('thing.create', $effect['permission'], 'visible to whoever sees its cause');
     }
 
     #[Test]

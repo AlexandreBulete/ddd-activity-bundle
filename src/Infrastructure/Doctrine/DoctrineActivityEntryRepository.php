@@ -9,6 +9,7 @@ use AlexandreBulete\DddActivityBundle\Domain\Repository\ActivityEntryRepositoryI
 use AlexandreBulete\DddDoctrineBridge\DoctrineRepository;
 use AlexandreBulete\DddFoundation\Domain\ValueObject\IdentifierVO;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @extends DoctrineRepository<ActivityEntry>
@@ -25,6 +26,25 @@ final class DoctrineActivityEntryRepository extends DoctrineRepository implement
     public function findById(IdentifierVO $id): ?ActivityEntry
     {
         return $this->em->find(ActivityEntry::class, $id->value());
+    }
+
+    public function visibleTo(array $permissions, ?string $actorId): static
+    {
+        return $this->constrained(static function (QueryBuilder $qb, string $alias) use ($permissions, $actorId): void {
+            $visible = $qb->expr()->orX();
+            if ($permissions !== []) {
+                $visible->add("{$alias}.permission IN (:visible_permissions)");
+                $visible->add("{$alias}.visibleWith IN (:visible_permissions)");
+                $qb->setParameter('visible_permissions', $permissions);
+            }
+            if ($actorId !== null) {
+                $visible->add("{$alias}.actorId = :visible_actor");
+                $qb->setParameter('visible_actor', $actorId);
+            }
+
+            // Holding nothing and being nobody: nothing to see.
+            $qb->andWhere($visible->count() > 0 ? $visible : '1 = 0');
+        });
     }
 
     public function findChain(string $correlationId): array

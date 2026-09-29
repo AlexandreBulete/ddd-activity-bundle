@@ -7,10 +7,6 @@
          failOnDeprecation="true"
          failOnNotice="true"
          failOnWarning="true">
-    <php>
-        <!-- Kernel tests: keep the framework's default logger quiet. -->
-        <env name="SHELL_VERBOSITY" value="-1"/>
-    </php>
     <testsuites>
         <testsuite name="unit">
             <directory>tests/Unit</directory>

@@ -15,11 +15,13 @@ final readonly class FindActivityEntriesQuery implements QueryInterface
     /**
      * @param array<string, mixed>  $criteria
      * @param array<string, string> $withSorting
+     * @param ActivityVisibility|null $visibility null: everything (no authorization, or a viewer who holds it all)
      */
     public function __construct(
         public ?int $page = null,
         public ?int $itemsPerPage = null,
         public array $criteria = [],
         public array $withSorting = [],
+        public ?ActivityVisibility $visibility = null,
     ) {}
 }

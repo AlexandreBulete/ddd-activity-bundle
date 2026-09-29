@@ -28,6 +28,7 @@ final readonly class ActivityJournal
         private TraceContext $context,
         private EntryFactory $entries,
         private ActivityWriter $writer,
+        private JournalContext $journal,
         private LoggerInterface $logger = new NullLogger(),
     ) {}
 
@@ -37,9 +38,19 @@ final readonly class ActivityJournal
     public function recordEffect(string $action, ?ActivityDescription $description = null, ?\Throwable $failure = null): void
     {
         $trace = $this->context->current() ?? self::detachedTrace();
+        // Visible to whoever may see the command that caused it.
+        $cause = $this->journal->current();
 
         try {
-            $this->writer->independently($this->entries->create($trace, EntryKind::Effect, $action, $description, $failure));
+            $this->writer->independently($this->entries->create(
+                $trace,
+                EntryKind::Effect,
+                $action,
+                $description,
+                $cause['permission'] ?? null,
+                $cause['visibleWith'] ?? null,
+                $failure,
+            ));
         } catch (\Throwable $journalFailure) {
             $this->logger->error('Could not journal the effect {action}.', [
                 'action' => $action,

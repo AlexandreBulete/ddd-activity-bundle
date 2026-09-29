@@ -25,6 +25,17 @@ final class JournalPolicy
         return $this->decisions[$message::class] ??= self::decide($message);
     }
 
+    /**
+     * The wider permission an entry is also visible with — #[Journaled(visibleWith: …)],
+     * on a query or a command.
+     */
+    public function visibleWith(object $message): ?string
+    {
+        $journaled = (new \ReflectionClass($message))->getAttributes(Journaled::class);
+
+        return $journaled === [] ? null : $journaled[0]->newInstance()->visibleWith;
+    }
+
     private static function decide(object $message): ?EntryKind
     {
         $class = new \ReflectionClass($message);
