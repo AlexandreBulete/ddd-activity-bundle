@@ -1,3 +1,12 @@
+## [1.2.0] - 2026-09-29
+
+### 🚀 Features
+
+- Journal the credential an actor used
+
+### 📚 Documentation
+
+- Update CHANGELOG.md for 1.1.1
 ## [1.1.1] - 2026-09-29
 
 ### 🐛 Bug Fixes
