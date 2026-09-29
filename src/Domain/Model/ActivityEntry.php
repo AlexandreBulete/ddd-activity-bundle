@@ -34,6 +34,7 @@ final class ActivityEntry
         private(set) string $actorKind,
         private(set) ?string $actorId,
         private(set) string $actorLabel,
+        private(set) ?string $actorCredential,
         private(set) string $channel,
         private(set) string $correlationId,
         private(set) ?string $causationId,
@@ -62,6 +63,7 @@ final class ActivityEntry
         string $correlationId,
         ?string $causationId = null,
         ?string $messageId = null,
+        ?string $actorCredential = null,
         ?string $error = null,
         ?string $permission = null,
         ?string $visibleWith = null,
@@ -83,7 +85,7 @@ final class ActivityEntry
 
         return new self(
             $id, $occurredAt, $kind, $action, $permission, $visibleWith, $outcome, $error,
-            $actorKind, $actorId, $actorLabel, $channel, $correlationId, $causationId, $messageId,
+            $actorKind, $actorId, $actorLabel, $actorCredential, $channel, $correlationId, $causationId, $messageId,
             $subjectType, $subjectId, $summary, $summaryParams, $details,
         );
     }

@@ -31,6 +31,7 @@ final class ActivityEntryResource implements ResourceInterface
         public ?AbstractUid $id = null,
         public ?\DateTimeImmutable $occurredAt = null,
         public ?string $actor = null,
+        public ?string $credential = null,
         public ?string $action = null,
         public ?string $subject = null,
         public ?string $outcome = null,
@@ -53,6 +54,7 @@ final class ActivityEntryResource implements ResourceInterface
             id: $entry->id->value(),
             occurredAt: $entry->occurredAt,
             actor: $entry->actorLabel . ($entry->actorKind === 'user' ? '' : ' (' . $entry->actorKind . ')'),
+            credential: $entry->actorCredential,
             // The FQCN is unreadable in a cell; the filter still searches it.
             action: $separator === false ? $entry->action : substr($entry->action, $separator + 1),
             subject: $entry->subjectType === null ? null : $entry->subjectType . ' #' . $entry->subjectId,

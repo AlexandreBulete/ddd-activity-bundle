@@ -25,6 +25,7 @@
         <field name="actorKind" type="string" column="actor_kind" length="10"/>
         <field name="actorId" type="string" column="actor_id" length="64" nullable="true"/>
         <field name="actorLabel" type="string" column="actor_label" length="255"/>
+        <field name="actorCredential" type="string" column="actor_credential" length="64" nullable="true"/>
         <field name="channel" type="string" length="32"/>
         <field name="correlationId" type="string" column="correlation_id" length="64"/>
         <field name="causationId" type="string" column="causation_id" length="64" nullable="true"/>
@@ -42,6 +43,7 @@
             <index columns="subject_type,subject_id"/>
             <index columns="action"/>
             <index columns="permission"/>
+            <index columns="actor_credential"/>
         </indexes>
     </entity>
 </doctrine-mapping>

@@ -15,7 +15,7 @@ composer require alexandrebulete/ddd-activity-bundle
 bin/console doctrine:migrations:migrate
 ```
 
-Requires `alexandrebulete/ddd-symfony-bundle` ≥ 1.3, whose tracing provides the
+Requires `alexandrebulete/ddd-symfony-bundle` ≥ 1.5, whose tracing provides the
 actor and the chain on every message. Symfony Security and an IAM are
 optional: without them, the system is the actor of every chain.
 
@@ -31,7 +31,9 @@ The bundle ships its own migration (a service, so it follows
 | An external effect | when the adapter records it (below) |
 | Anything else on the buses | no |
 
-Each entry keeps: when; who (kind, id, and the name *at that time*); the
+Each entry keeps: when; who (kind, id, the name *at that time*, and the
+credential used — an API token's id, filterable: "everything this token did");
+the
 action; the outcome (`succeeded`, `failed` with the error, `refused`); the
 channel; the chain (`correlation_id`, `causation_id`, `message_id`); the
 permission of the use case; and what the message chose to describe.

@@ -7,6 +7,7 @@ namespace AlexandreBulete\DddActivityBundle\Tests\Integration;
 use AlexandreBulete\DddActivityBundle\Application\Command\PurgeActivity\PurgeActivityCommand;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20260929120000;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20261001130000;
+use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20261002120000;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\CreateThing;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\Housekeeping;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\ListThings;
@@ -66,7 +67,7 @@ final class JournalVisibilityTest extends KernelTestCase
         foreach ($schemaManager->listTableNames() as $table) {
             $schemaManager->dropTable($table);
         }
-        foreach ([Version20260929120000::class, Version20261001130000::class] as $migration) {
+        foreach ([Version20260929120000::class, Version20261001130000::class, Version20261002120000::class] as $migration) {
             $from = $schemaManager->introspectSchema();
             $to = clone $from;
             (new $migration($this->connection, new NullLogger(), self::TABLE))->up($to);

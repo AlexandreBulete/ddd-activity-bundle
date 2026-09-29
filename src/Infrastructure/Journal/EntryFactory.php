@@ -49,6 +49,7 @@ final readonly class EntryFactory
             actorKind: $trace->actor->kind->value,
             actorId: $trace->actor->id,
             actorLabel: $trace->actor->label,
+            actorCredential: $trace->actor->credential,
             channel: $trace->stamp->channel,
             correlationId: $trace->stamp->correlationId,
             causationId: $trace->stamp->causationId,

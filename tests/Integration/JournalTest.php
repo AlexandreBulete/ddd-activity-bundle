@@ -7,6 +7,7 @@ namespace AlexandreBulete\DddActivityBundle\Tests\Integration;
 use AlexandreBulete\DddActivityBundle\Application\Command\PurgeActivity\PurgeActivityCommand;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20260929120000;
 use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20261001130000;
+use AlexandreBulete\DddActivityBundle\Infrastructure\Doctrine\Migrations\Version20261002120000;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\CreateThing;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\Housekeeping;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\ListThings;
@@ -14,6 +15,8 @@ use AlexandreBulete\DddActivityBundle\Tests\Integration\App\ReadContract;
 use AlexandreBulete\DddActivityBundle\Tests\Integration\App\Thing;
 use AlexandreBulete\DddFoundation\Application\Command\CommandBusInterface;
 use AlexandreBulete\DddFoundation\Application\Query\QueryBusInterface;
+use AlexandreBulete\DddSymfonyBundle\Messenger\Tracing\Actor;
+use AlexandreBulete\DddSymfonyBundle\Messenger\Tracing\TraceContext;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\SQLitePlatform;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,7 +59,7 @@ final class JournalTest extends KernelTestCase
         foreach ($schemaManager->listTableNames() as $table) {
             $schemaManager->dropTable($table);
         }
-        foreach ([Version20260929120000::class, Version20261001130000::class] as $migration) {
+        foreach ([Version20260929120000::class, Version20261001130000::class, Version20261002120000::class] as $migration) {
             $from = $schemaManager->introspectSchema();
             $to = clone $from;
             (new $migration($this->connection, new NullLogger(), self::TABLE))->up($to);
@@ -91,6 +94,21 @@ final class JournalTest extends KernelTestCase
         self::assertSame(['name' => 'alpha'], $this->json($entry['details']));
         self::assertSame($entry['message_id'], $entry['correlation_id'], 'the first message starts the chain');
         self::assertSame('thing.create', $entry['permission']);
+    }
+
+    #[Test]
+    public function an_agent_is_journaled_with_the_token_it_used(): void
+    {
+        $context = self::getContainer()->get(TraceContext::class);
+        self::assertInstanceOf(TraceContext::class, $context);
+
+        $context->runAs(Actor::agent('a-7', 'Veille', 'tok-1'), 'api', fn () => $this->commands->dispatch(new CreateThing('alpha')));
+
+        $entry = $this->only(CreateThing::class);
+        self::assertSame('agent', $entry['actor_kind']);
+        self::assertSame('a-7', $entry['actor_id']);
+        self::assertSame('tok-1', $entry['actor_credential']);
+        self::assertSame('api', $entry['channel']);
     }
 
     #[Test]

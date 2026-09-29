@@ -13,7 +13,7 @@
         "alexandrebulete/ddd-doctrine-bridge": "^1.3",
         "alexandrebulete/ddd-foundation": "^1.4",
         "alexandrebulete/ddd-sylius-bundle": "^1.0",
-        "alexandrebulete/ddd-symfony-bundle": "^1.3",
+        "alexandrebulete/ddd-symfony-bundle": "^1.5",
         "doctrine/dbal": "^4.3",
         "doctrine/doctrine-bundle": "^2.13 || ^3.0",
         "doctrine/doctrine-migrations-bundle": "^3.7 || ^4.0",

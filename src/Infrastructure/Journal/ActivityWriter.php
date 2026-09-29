@@ -50,6 +50,7 @@ final readonly class ActivityWriter
             'actor_kind' => $entry->actorKind,
             'actor_id' => $entry->actorId,
             'actor_label' => $entry->actorLabel,
+            'actor_credential' => $entry->actorCredential,
             'channel' => $entry->channel,
             'correlation_id' => $entry->correlationId,
             'causation_id' => $entry->causationId,

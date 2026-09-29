@@ -4,6 +4,7 @@ activity:
     field:
         occurred_at: When
         actor: Who
+        credential: Token
         action: Action
         summary: Summary
         subject: On

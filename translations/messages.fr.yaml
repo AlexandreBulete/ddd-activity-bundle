@@ -4,6 +4,7 @@ activity:
     field:
         occurred_at: Quand
         actor: Qui
+        credential: Jeton
         action: Action
         summary: Résumé
         subject: Sur
