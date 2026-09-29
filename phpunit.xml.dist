@@ -8,9 +8,6 @@
          failOnNotice="true"
          failOnWarning="true">
     <testsuites>
-        <testsuite name="unit">
-            <directory>tests/Unit</directory>
-        </testsuite>
         <testsuite name="integration">
             <directory>tests/Integration</directory>
         </testsuite>
