@@ -13,6 +13,9 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 /**
  * Registered only when `activity.admin.enabled` is true. Shown to whoever may
  * read the journal — to everyone when nothing checks permissions.
+ *
+ * Sits under a shared "System" section (get-or-create, so it works whether or
+ * not another system contributor created it first), next to the outbox.
  */
 #[AutoconfigureTag('app.menu_contributor', ['priority' => 10])]
 final readonly class ActivityMenuContributor implements MenuContributorInterface
@@ -29,7 +32,12 @@ final readonly class ActivityMenuContributor implements MenuContributorInterface
             return;
         }
 
-        $menu
+        $system = $menu->getChild('system') ?? $menu
+            ->addChild('system')
+            ->setLabel('activity.menu.system')
+            ->setLabelAttribute('icon', 'tabler:settings');
+
+        $system
             ->addChild('activity', ['route' => 'activity_admin_activity_entry_index'])
             ->setLabel('activity.menu.journal')
             ->setLabelAttribute('icon', 'tabler:history');

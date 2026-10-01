@@ -1,5 +1,6 @@
 activity:
     menu:
+        system: System
         journal: Activity journal
     field:
         occurred_at: When
