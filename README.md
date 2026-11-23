@@ -4,7 +4,7 @@ The activity journal of a DDD application: **who did what, through which chain
 of causes, and how it ended** — for every command, every sensitive read and
 every effect on the outside world.
 
-"Who deployed lapsa to production on the 12th?" becomes a search in the back
+"Who deployed acme to production on the 12th?" becomes a search in the back
 office: Pauline from Slack, an AI agent, or the system reacting to an approval
 — with everything that led to it and everything that followed.
 

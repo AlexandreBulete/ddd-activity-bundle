@@ -9,7 +9,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * The visibility of the message being handled, for the effects it causes: an
  * effect is visible to whoever may see the command that triggered it — seeing
- * "deploy lapsa" but not "deployment triggered" would make no sense.
+ * "deploy acme" but not "deployment triggered" would make no sense.
  */
 final class JournalContext implements ResetInterface
 {
