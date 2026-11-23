@@ -1,3 +1,12 @@
+## [1.3.1] - 2026-11-23
+
+### 📚 Documentation
+
+- Update CHANGELOG.md for 1.3.0
+
+### ⚙️ Miscellaneous Tasks
+
+- Neutral examples
 ## [1.3.0] - 2026-10-01
 
 ### 🚀 Features
